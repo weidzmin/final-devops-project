@@ -1,0 +1,28 @@
+# Конфигурация приложения
+app:
+  name: python-backend
+  image: yourdockerhubusername/python-backend
+  tag: latest
+  port: 5000
+  replicas: 2
+
+# Ресурсы
+resources:
+  requests:
+    memory: "64Mi"
+    cpu: "50m"
+  limits:
+    memory: "128Mi"
+    cpu: "100m"
+
+# Ingress настройки
+ingress:
+  enabled: true
+  host: app.student1.devops8.test-danit.com
+  className: nginx
+
+# Service настройки
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 5000

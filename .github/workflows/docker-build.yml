@@ -1,0 +1,51 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+      
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    
+    - name: Get short SHA
+      id: sha
+      run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+        
+    - name: Build and push
+      uses: docker/build-push-action@v4
+      with:
+        context: ./app
+        push: true
+        tags: |
+          ${{ secrets.DOCKER_USERNAME }}/python-backend:${{ steps.sha.outputs.SHORT_SHA }}
+          ${{ secrets.DOCKER_USERNAME }}/python-backend:latest
+    
+    - name: Update deployment manifest
+      run: |
+        sed -i "s|image: .*/python-backend:.*|image: ${{ secrets.DOCKER_USERNAME }}/python-backend:${{ steps.sha.outputs.SHORT_SHA }}|g" k8s-manifests/deployment.yaml
+        cat k8s-manifests/deployment.yaml
+    
+    - name: Commit and push changes
+      run: |
+        git config --global user.name "GitHub Actions Bot"
+        git config --global user.email "actions@github.com"
+        git add k8s-manifests/deployment.yaml
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Update image to ${{ steps.sha.outputs.SHORT_SHA }}" && git push)
