@@ -10,7 +10,7 @@ provider "kubernetes" {
   token                  = data.aws_eks_cluster_auth.danit.token
 }
 
-data "aws_availability_zones" "available" {}
+# data "aws_availability_zones" "available" {}
 
 # Not required: currently used in conjunction with using
 # icanhazip.com to determine local workstation external IP
