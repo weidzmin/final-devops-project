@@ -10,10 +10,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - app.student1.devops8.test-danit.com
+    - app.studentort.devops8.test-danit.com
     secretName: app-tls-cert
   rules:
-  - host: app.student1.devops8.test-danit.com
+  - host: app.studentort.devops8.test-danit.com
     http:
       paths:
       - path: /

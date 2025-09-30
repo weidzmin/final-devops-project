@@ -1,16 +1,12 @@
 resource "aws_eks_cluster" "danit" {
   name     = var.name
-  role_arn = aws_iam_role.cluster.arn
+  role_arn = local.cluster_role_arn
 
   vpc_config {
-    security_group_ids = [aws_security_group.danit-cluster.id]
-    subnet_ids         = var.subnets_ids
+    subnet_ids = var.subnets_ids
   }
 
-  depends_on = [
-    aws_iam_role_policy_attachment.kubeedge-cluster-AmazonEKSClusterPolicy,
-    aws_iam_role_policy_attachment.kubeedge-cluster-AmazonEKSVPCResourceController,
-  ]
+  depends_on = []
   tags = merge(
     var.tags,
     { Name = "${var.name}" }
