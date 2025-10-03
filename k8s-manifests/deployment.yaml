@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: python-backend
-        image: ortoss/python-backend:8b0a475
+        image: ortoss/python-backend:af30cd4
         ports:
         - containerPort: 5000
         env:
