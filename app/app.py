@@ -12,7 +12,7 @@ def hello():
     pod_ip = socket.gethostbyname(hostname)
     
     return jsonify({
-        'message': 'Hello from Python backend, 3.0!',
+        'message': 'Hello from Python backend, 4.0!',
         'pod_name': hostname,
         'pod_ip': pod_ip,
         'status': 'OK'
